@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=teste123
+      - POSTGRES_DB=topaz
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - proxynet
+
+  app:
+    build: .
+    image: topaz_teste:1.0
+    container_name: topaz-teste
+    command: /bin/bash -c "tail -F anything"
+    ports:
+      - "5000:5000"
+    volumes:
+      - './:/var/www/topaz/'
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+    networks:
+      - proxynet
+
+  elasticsearch:
+    image: elasticsearch:8.13.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=teste123
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - proxynet
+
+networks:
+  proxynet:
+    name: topaz_net
