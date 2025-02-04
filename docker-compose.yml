@@ -20,7 +20,7 @@ services:
     build: .
     image: topaz_teste:1.0
     container_name: topaz-teste
-    command: /bin/bash -c "tail -F anything"
+    command: ["/var/www/topaz/setup.sh"]
     ports:
       - "5000:5000"
     volumes:

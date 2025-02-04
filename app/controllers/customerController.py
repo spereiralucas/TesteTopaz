@@ -108,21 +108,3 @@ class CustomerController():
             }
         finally:
             self.els.close()
-
-
-teste = {
-  "nome": "",
-  "idade": 0,
-  "last_transactions": [
-    {
-      "agencia": 0,
-      "conta": 0,
-      "type": "debit|credit",
-      "valor": 0.0,
-      "nome": "",
-      "idade": "",
-      "suspect": False
-    }
-  ],
-  "balance": 0.0
-}

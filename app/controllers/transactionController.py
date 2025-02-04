@@ -1,4 +1,4 @@
-from app.models.transaction import ChannelEnum, TypeEnum
+from app.models.transaction import ChannelEnum
 from app.utils.elasticConn import elastic_conn
 from app.models.customer import Customer
 from datetime import datetime, timedelta
@@ -15,6 +15,9 @@ class TransactionController():
 
     def get_transaction(self, request):
         try:
+            if self.els.indices.exists(index='transaction').raw is False:
+                self.create_elastic_index()
+
             customers = self.db.query(Customer).filter(
                 or_((
                     Customer.account == request['origin_account']) & (
@@ -123,3 +126,19 @@ class TransactionController():
                 'response': 201,
                 'suspect': False
             }
+
+    def create_elastic_index(self):
+        mapping = {
+            'properties': {
+                'date_hour': {'type': 'date'},
+                'value': {'type': 'float'},
+                'suspect': {'type': 'boolean'},
+                'channel': {'type': 'text'},
+                'agency_orig': {'type': 'integer'},
+                'agency_dest': {'type': 'integer'},
+                'account_orig': {'type': 'integer'},
+                'account_dest': {'type': 'integer'}
+            }
+        }
+
+        self.els.indices.exists(index='transaction', mappings=mapping)
