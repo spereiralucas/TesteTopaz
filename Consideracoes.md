@@ -23,7 +23,5 @@ $ docker exec -it topaz-teste bash
 E para executá-los, basta executar:
 
 ```cmd
-$ python3 -m unittest test/customerTDD.py
-$ python3 -m unittest test/transactionTDD.py
-$ python3 -m unittest test/balanceTDD.py
+$ python3 -m unittest test/*.py
 ```
