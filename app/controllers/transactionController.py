@@ -141,4 +141,4 @@ class TransactionController():
             }
         }
 
-        self.els.indices.exists(index='transaction', mappings=mapping)
+        self.els.indices.create(index='transaction', mappings=mapping)
